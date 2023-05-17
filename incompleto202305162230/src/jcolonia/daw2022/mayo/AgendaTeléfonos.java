@@ -31,6 +31,12 @@ public class AgendaTeléfonos {
 	}
 
 	/**
+	 * Borrar agenda.
+	 */
+	public void borrar() {
+		lista.clear();
+	}
+	/**
 	 * Añade o modifica un número de teléfono con su nombre.
 	 * 
 	 * @param nombre el nombre o texto asociado

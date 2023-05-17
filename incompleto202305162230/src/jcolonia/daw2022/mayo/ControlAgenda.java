@@ -1,5 +1,7 @@
 package jcolonia.daw2022.mayo;
 
+import java.util.Scanner;
+
 /**
  * Gestión de números de teléfono.
  * 
@@ -47,7 +49,7 @@ public class ControlAgenda {
 	/**
 	 * Gestiona el menú principal y ejecuta las operaciones elegidas.
 	 */
-	private void buclePrincipal() {
+	private void buclePrincipal(){
 		int opciónElegida;
 		boolean fin = false;
 
@@ -64,24 +66,71 @@ public class ControlAgenda {
 				fin = true;
 				Vista.mostrarAviso("¡¡¡A-D-I-O-S!!");
 				break;
-			//case 1: // Opción 1: Entrada datos
-			//	cargarTeléfono();
-			//	break;
-			//case 2: // Opción 2: Mostrar listado
-			//	mostrarAgenda();
-			//	break;
-			//case 3: // Opción 3: Mostrar estado
-			//	mostrarEstado();
-			//	break;
-			//case 4: // Opción 4: Reset
-			//	restablecer();
-			//	break;
+			case 1: // Opción 1: Entrada datos
+				cargarTeléfono();
+				break;
+			case 2: // Opción 2: Mostrar listado
+				mostrarAgenda();
+				break;
+			case 3: // Opción 3: Mostrar estado
+				mostrarEstado();
+				break;
+			case 4: // Opción 4: Reset
+				restablecer();
+				break;
 			default: // Opción no esperada: abortar
 				ejecutarGenérico(opciónElegida);
 				Vista.mostrarError("Error interno de programa - operación pendiente de desarrollo");
 				System.exit(1);
 			}
 		} while (!fin);
+	}
+
+	private void restablecer() {
+		agenda.borrar();
+		if(agenda.tamaño()==0){
+			agendaFueBorrada=true;
+			Vista.mostrarAviso("agendaFueBorrada");
+		}
+	}
+
+	private void mostrarEstado() {
+		Vista.mostrarTexto("agendaFueImportada");
+		Vista.mostrarAviso("agendaFueExportada");
+		Vista.mostrarAviso("agendaFueBorrada");
+		
+	}
+
+	private void mostrarAgenda() {
+		VistaListadoInfo listado=new VistaListadoInfo(agenda);
+		listado.mostrar();
+	}
+
+	private void cargarTeléfono() {
+		String preguntarNumero="Introduzca un numero de 9 digitos: ";
+		String preguntarNombre="Introduzca un Nombre: ";
+		int minimo=9;
+		int maximo=9;
+			
+		Scanner ScControl= new Scanner(System.in);
+		
+		AgendaTeléfonos cargador=new AgendaTeléfonos();
+		
+		try {
+			//VistaMenúBásico cosaMenu=new VistaMenúBásico(preguntarNumero, ScControl);
+			VistaMenúBásico cosaMenu=new VistaMenúBásico(preguntarNombre, ScControl);
+			String nombre;
+			nombre=cosaMenu.pedirTexto(preguntarNombre);
+
+			int numero;
+			numero=cosaMenu.pedirEntero(preguntarNumero,9,9);
+			cargador.añadir(nombre, numero);
+			
+		} catch (Exception e) {
+			// TODO Bloque catch generado automáticamente
+			e.printStackTrace();
+		}
+		
 	}
 
 	/**
