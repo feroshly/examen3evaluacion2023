@@ -1,5 +1,7 @@
 package jcolonia.daw2022.mayo;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -67,10 +69,10 @@ public class ControlAgenda {
 				Vista.mostrarAviso("¡¡¡A-D-I-O-S!!");
 				break;
 			case 1: // Opción 1: Entrada datos
-				cargarTeléfono();
+				gestionarCargarTeléfono();
 				break;
 			case 2: // Opción 2: Mostrar listado
-				mostrarAgenda();
+				gestionarMostrarAgenda();
 				break;
 			case 3: // Opción 3: Mostrar estado
 				mostrarEstado();
@@ -87,43 +89,89 @@ public class ControlAgenda {
 	}
 
 	private void restablecer() {
-		agenda.borrar();
-		if(agenda.tamaño()==0){
-			agendaFueBorrada=true;
-			Vista.mostrarAviso("agendaFueBorrada");
-		}
+//		agenda.borrar();
+//		if(agenda.tamaño()==0){
+//			agendaFueBorrada=true;
+//			Vista.mostrarAviso("agendaFueBorrada");
+//		}
+
+		agenda=new AgendaTeléfonos();
+		agendaFueBorrada=true;
+		agendaFueImportada=false;
+		agendaFueExportada=false;
 	}
 
 	private void mostrarEstado() {
+		VistaListadoInfo vista;
+		String mensaje;
+		vista=new VistaListadoInfo(agenda);
+		//vista=new VistListadoInfo("Estado de la agenda");
+		//---------------------------------------------
+		List<String> listaInformaciones;
+		listaInformaciones=new ArrayList<>();
+		mensaje = String.format("Hay %d telefonos",agenda.tamaño());
+		listaInformaciones.add(mensaje);
+
+		mensaje = String.format("Hay %s ha sido importada",(agendaFueImportada) ? "" : "no ");
+		listaInformaciones.add(mensaje);
+		
+		mensaje = String.format("Hay %s ha sido importada",(agendaFueExportada) ? "" : "no ");
+		listaInformaciones.add(mensaje);
+		
+		mensaje = String.format("Hay %s ha sido importada",(agendaFueBorrada) ? "" : "no ");
+		listaInformaciones.add(mensaje);
+		//------------//
+//		vista.mostrar(listaInformaciones);
+//		vista.mostrarEstado(this);
+		Vista.pedirContinuar();				
+		
+		//---------------------------------------------			
 		Vista.mostrarTexto("agendaFueImportada");
 		Vista.mostrarAviso("agendaFueExportada");
 		Vista.mostrarAviso("agendaFueBorrada");
 		
 	}
 
-	private void mostrarAgenda() {
-		VistaListadoInfo listado=new VistaListadoInfo(agenda);
-		listado.mostrar();
+	private void gestionarMostrarAgenda() {
+		VistaListadoInfo vista;
+		String mensaje;
+		
+		vista=new VistaListadoInfo("Listado telefono", agenda.toListaTextos());
+		vista.mostrar();
+		
+		mensaje=String.format("hay %d telefonos", agenda.tamaño());
+		Vista.mostrarAviso(mensaje);
+		Vista.pedirContinuar();
+		
+		
 	}
 
-	private void cargarTeléfono() {
+	private void gestionarCargarTeléfono() {
 		String preguntarNumero="Introduzca un numero de 9 digitos: ";
 		String preguntarNombre="Introduzca un Nombre: ";
-		int minimo=9;
-		int maximo=9;
-			
-		Scanner ScControl= new Scanner(System.in);
-		
 		AgendaTeléfonos cargador=new AgendaTeléfonos();
+	
+		//Silenciado TEMPORALMENTE-Codigo BUENO
+		VistaAltaTeléfono vista;
+		vista=new VistaAltaTeléfono("Alta Telefono");
+		vista.cargarTelefono(agenda);
+		
+		boolean huboCambios=false;
+		huboCambios=vista.cargarTeléfono();
+		//3 Linea de POCA importancia
+		String mensaje = String.format("%s cambios : ahora hay %d telefonos",
+				(huboCambios) ? "Hubo" : "No hubo",  agenda.tamaño());		
+//		String mensaje = String.format("Hay %d telefonos",agenda.tamaño());
+		
+		Vista.mostrarAviso(mensaje);
+		Vista.pedirContinuar();
 		
 		try {
-			//VistaMenúBásico cosaMenu=new VistaMenúBásico(preguntarNumero, ScControl);
-			VistaMenúBásico cosaMenu=new VistaMenúBásico(preguntarNombre, ScControl);
 			String nombre;
-			nombre=cosaMenu.pedirTexto(preguntarNombre);
-
 			int numero;
-			numero=cosaMenu.pedirEntero(preguntarNumero,9,9);
+		
+			nombre=Vista.pedirTexto(preguntarNombre);
+			numero=Vista.pedirEntero(preguntarNumero,1,999999999);
 			cargador.añadir(nombre, numero);
 			
 		} catch (Exception e) {

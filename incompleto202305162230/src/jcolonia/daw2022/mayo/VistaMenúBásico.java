@@ -47,16 +47,17 @@ public class VistaMenúBásico extends Vista{
 	/**
 	 * Pide al usuario que seleccione una opcion del menu intoduciendo un numero por consola.
 	 * @return numOpcion El numero de la opcion seleccionada
-	 * @throws VistaException La excepcion adecuada
 	 */
-	public int pedirOpción() throws VistaException{
+	public int pedirOpción(){
 		int numOpcion=0;
 
-			int max=9;
-			int min=9;
-			numOpcion=pedirEntero("Introduzca la opcion deseada", max, min);
-			//numOpcion=pedirEntero("Introduzca la opcion deseada");
-
+				try {
+					numOpcion = pedirEntero("Introduzca la opcion deseada", 0, listaOpcionesMenu.size());
+				} catch (VistaException e) {
+					//e.printStackTrace();
+				}
+				//numOpcion=pedirEntero("Introduzca la opcion deseada", max, min);
+				//numOpcion=pedirEntero("Introduzca la opcion deseada");
 		return numOpcion;
 	}
 	
