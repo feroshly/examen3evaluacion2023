@@ -104,11 +104,10 @@ public class ControlAgenda {
 	private void mostrarEstado() {
 		VistaListadoInfo vista;
 		String mensaje;
-		vista=new VistaListadoInfo(agenda);
-		//vista=new VistListadoInfo("Estado de la agenda");
-		//---------------------------------------------
 		List<String> listaInformaciones;
 		listaInformaciones=new ArrayList<>();
+
+		//---------------------------------------------
 		mensaje = String.format("Hay %d telefonos",agenda.tamaño());
 		listaInformaciones.add(mensaje);
 
@@ -121,10 +120,21 @@ public class ControlAgenda {
 		mensaje = String.format("Hay %s ha sido importada",(agendaFueBorrada) ? "" : "no ");
 		listaInformaciones.add(mensaje);
 		//------------//
-//		vista.mostrar(listaInformaciones);
-//		vista.mostrarEstado(this);
-		Vista.pedirContinuar();				
 		
+		//Que meto en el primerparametro????
+		//vista=new VistListadoInfo("Estado de la agenda");
+		vista=new VistaListadoInfo("Estado de la agenda", listaInformaciones);//agenda
+		vista.mostrar();//listaInformaciones
+
+		
+		//vista.mostrarEstado(this);
+		//COPIADO DE DIEGO------¿Soluciona la linea de arriba?------------------------------COPIADO DE DIEGO
+		VistaEstado estado = new VistaEstado(agendaFueBorrada, agendaFueExportada, agendaFueImportada, agenda);
+		estado.mostrarEstado();
+		//COPIADO DE DIEGO-----------------------------------COPIADO DE DIEGO
+		
+		
+		Vista.pedirContinuar();				
 		//---------------------------------------------			
 		Vista.mostrarTexto("agendaFueImportada");
 		Vista.mostrarAviso("agendaFueExportada");
@@ -142,8 +152,6 @@ public class ControlAgenda {
 		mensaje=String.format("hay %d telefonos", agenda.tamaño());
 		Vista.mostrarAviso(mensaje);
 		Vista.pedirContinuar();
-		
-		
 	}
 
 	private void gestionarCargarTeléfono() {
@@ -154,22 +162,23 @@ public class ControlAgenda {
 		//Silenciado TEMPORALMENTE-Codigo BUENO
 		VistaAltaTeléfono vista;
 		vista=new VistaAltaTeléfono("Alta Telefono");
-		vista.cargarTelefono(agenda);
+		
+		vista.cargarTeléfono(agenda);
 		
 		boolean huboCambios=false;
-		huboCambios=vista.cargarTeléfono();
-		//3 Linea de POCA importancia
+		huboCambios=vista.cargarTeléfono(cargador);
+		
+		//3 Lineas de MENOR importancia
 		String mensaje = String.format("%s cambios : ahora hay %d telefonos",
 				(huboCambios) ? "Hubo" : "No hubo",  agenda.tamaño());		
 //		String mensaje = String.format("Hay %d telefonos",agenda.tamaño());
 		
-		Vista.mostrarAviso(mensaje);
-		Vista.pedirContinuar();
-		
+		//-------------------------------
+		//Este bloque es donde introduces nombre y numero.
 		try {
 			String nombre;
 			int numero;
-		
+			
 			nombre=Vista.pedirTexto(preguntarNombre);
 			numero=Vista.pedirEntero(preguntarNumero,1,999999999);
 			cargador.añadir(nombre, numero);
@@ -178,6 +187,10 @@ public class ControlAgenda {
 			// TODO Bloque catch generado automáticamente
 			e.printStackTrace();
 		}
+		//-------------------------------
+		Vista.mostrarAviso(mensaje);
+		Vista.pedirContinuar();
+		
 		
 	}
 
